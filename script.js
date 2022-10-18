@@ -3,18 +3,34 @@ let myLibrary = [];
 const bookTable = document.getElementById("bookTable");
 const addButton = document.getElementById("addBook");
 
-function Book(title, author, pages, read) {
+// hard coded books for testing
+const hitchhikers = new Book("HHTGT", "Douglas Adams", 287, "Have read it");
+const mybook = new Book("Untitiled", "Evan Dumas", 128, "Haven't read it");
+const bibble = new Book("Bibble", "Jesus", 666, "Haven't read it");
+
+addBookToLibrary(hitchhikers);
+addBookToLibrary(mybook);
+addBookToLibrary(bibble);
+
+// initial showing of pregen books
+// showLibrary();
+
+
+function Book(title, author, pages, read, id) {
     this.title = title;
     this.author = author;
     this.pages = pages;
     this.read = read;
+    this.id = id;
 
     this.info = function() {
         return title + ", by " + author + " at " + pages + " pages and " + read + ".";
     }
 }
 
+
 function addBookToLibrary(book) {
+    book.id = myLibrary.length;
     myLibrary.push(book);
 }
 
@@ -24,6 +40,7 @@ function addBookToTable(book) {
     let authorCell = newRow.insertCell(1);
     let pagesCell = newRow.insertCell(2);
     let readCell = newRow.insertCell(3);
+    let buttonCell = newRow.insertCell(4);
 
     let newTitle = document.createTextNode(book.title);
     titleCell.appendChild(newTitle);
@@ -36,12 +53,31 @@ function addBookToTable(book) {
 
     let newRead = document.createTextNode(book.read);
     readCell.appendChild(newRead);
+
+    // update it here when this runs during refresh.
+
+    let removeButton = document.createElement("button");
+    removeButton.setAttribute("id", book.id);
+    removeButton.innerHTML = "Remove Book";
+    buttonCell.appendChild(removeButton);
+
+    removeButton.addEventListener("click", () => removeBook(book.id));
+}
+
+function removeBook(id){
+    // remove the offending section
+    myLibrary.splice(id, 1);
+    // refresh the table, and thus the buttons
+    showLibrary();
 }
 
 function showLibrary() {
     removeTable(); //this refreshes the table when you want to show new books.
+    // this will refresh the button id too!
+
     for(let i = 0; i < myLibrary.length; i++) {
         addBookToTable(myLibrary[i]);
+        myLibrary[i].id = i;
     }
 }
 
@@ -118,16 +154,17 @@ function callbackFunction(event) {
     const myFormData = new FormData(event.target);
 
     const formDataObj = Object.fromEntries(myFormData.entries());
-    console.log(formDataObj);
 
-    parseBook(formDataObj.title, formDataObj.author, formDataObj.pages, formDataObj.read);
+    // the id is the current library length (which will be the new array position once added, smart!)
+    // it assumes the library array is the same as what's showing, will need to fix that.
+    parseBook(formDataObj.title, formDataObj.author, formDataObj.pages, formDataObj.read, myLibrary.length);
 
 };
 
 // this is where i pull the form info from
-function parseBook(title, author, pages, read = `haven't read it`){
+function parseBook(title, author, pages, read = `haven't read it`, id){
 
-    const newBook = new Book(title, author, pages, read);
+    const newBook = new Book(title, author, pages, read, id);
 
     // add to array
     addBookToLibrary(newBook);
@@ -140,22 +177,8 @@ function parseBook(title, author, pages, read = `haven't read it`){
     console.log(node);
 
     let garbage = node.parentNode.removeChild(node);
-    
 }
 
 // when button is clicked, pop up the form via the function
 addButton.addEventListener("click", () => addForm());
 
-// hard coded books for testing
-const hitchhikers = new Book("HHTGT", "Douglas Adams", 287, "Have read it");
-
-const mybook = new Book("Untitiled", "Evan Dumas", 128, "Haven't read it");
-
-const bibble = new Book("Bibble", "Jesus", 666, "Haven't read it");
-
-addBookToLibrary(hitchhikers);
-addBookToLibrary(mybook);
-addBookToLibrary(bibble);
-
-// initial showing of pregen books
-showLibrary();
