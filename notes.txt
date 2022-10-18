@@ -1,5 +1,9 @@
 notes.txt
 
+TO DO:
+- prevent multiple forms when addForm() is used
+- make form disappear yet not reload page and wipe library (submit button behavior is weird)
+
 Write a function that loops through the array and displays each book on the page. 
 You can display them in some sort of table, or each on their own “card”. 
 It might help for now to manually add a few books to your array so you can see the display.
@@ -14,8 +18,11 @@ the new book: author, title, number of pages, whether it’s been read and anyth
 - so i'll need a button, and an event listener for that button, 
 - the button makes a whole Form popup, with input fields
 - instead of a "submit" button, it just runs the "add row and create object with input's values" function
+- utilized this page to help figure out how to move form data to object: https://stackabuse.com/convert-form-data-to-javascript-object/
+
 
 Add a button on each book’s display to remove the book from the library.
+
 - add a column for the remove button, add the button when you add the book, and associate the button with the book to remove it
 - ah, that's why a "redraw table" method would be helpful, because i'll be removing books.
 

@@ -58,6 +58,7 @@ function addForm(){
     // make the form not submit, instead run a function to pull the data
     let newForm = document.createElement("form");
     newForm.setAttribute("onsubmit", "return");
+    newForm.setAttribute("id", "newForm");
 
     // create input for Title (text)
     let title = document.createElement("input");
@@ -105,10 +106,10 @@ function addForm(){
     newForm.appendChild(breakLine);
     newForm.appendChild(submitButton);
 
-    document.getElementsByTagName("body")[0].appendChild(breakLine);
     document.getElementsByTagName("body")[0].appendChild(newForm);
 
     newForm.addEventListener('submit', callbackFunction);
+
 }
 
 function callbackFunction(event) {
@@ -120,6 +121,7 @@ function callbackFunction(event) {
     console.log(formDataObj);
 
     parseBook(formDataObj.title, formDataObj.author, formDataObj.pages, formDataObj.read);
+
 };
 
 // this is where i pull the form info from
@@ -130,7 +132,15 @@ function parseBook(title, author, pages, read = `haven't read it`){
     // add to array
     addBookToLibrary(newBook);
 
+    // refresh library
     showLibrary();
+
+    // remove form and break
+    let node = document.getElementById("newForm");
+    console.log(node);
+
+    let garbage = node.parentNode.removeChild(node);
+    
 }
 
 // when button is clicked, pop up the form via the function
