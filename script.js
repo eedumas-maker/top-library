@@ -1,6 +1,7 @@
 let myLibrary = [];
 
 const bookTable = document.getElementById("bookTable");
+const addButton = document.getElementById("addBook");
 
 function Book(title, author, pages, read) {
     this.title = title;
@@ -56,7 +57,7 @@ function addForm(){
 
     // make the form not submit, instead run a function to pull the data
     let newForm = document.createElement("form");
-    newForm.setAttribute("onsubmit", "return doForm()");
+    newForm.setAttribute("onsubmit", "return");
 
     // create input for Title (text)
     let title = document.createElement("input");
@@ -65,35 +66,86 @@ function addForm(){
     title.setAttribute("placeholder", "Title");
 
     // input for Author (text)
+    let author = document.createElement("input");
+    author.setAttribute("type", "text");
+    author.setAttribute("name", "author");
+    author.setAttribute("placeholder", "Author");
 
     // input for Pages (number)
+    let pages = document.createElement("input");
+    pages.setAttribute("type", "number");
+    pages.setAttribute("name", "pages");
+    pages.setAttribute("placeholder", "Pages");
 
-    // input for Have Read It (radio button)
+    // input for Have Read It (checkbox)
+    let read = document.createElement("input");
+    read.setAttribute("type", "checkbox");
+    read.setAttribute("id", "read");
+    read.setAttribute("name", "read");
+    read.setAttribute("value","Have read it");
 
-    // add the title input to the form
+    let readLabel = document.createElement("label");
+    readLabel.setAttribute("for", "read");
+    readLabel.textContent = "Have you read it?";
+
+    // will need a submit button to add the book
+
+    let submitButton = document.createElement("input");
+    submitButton.setAttribute("type", "submit");
+    submitButton.setAttribute("value", "Add book to library");
 
     newForm.appendChild(title);
+    newForm.appendChild(breakLine);
+    newForm.appendChild(author);
+    newForm.appendChild(breakLine);
+    newForm.appendChild(pages);
+    newForm.appendChild(breakLine);
+    newForm.appendChild(readLabel);
+    newForm.appendChild(read);
+    newForm.appendChild(breakLine);
+    newForm.appendChild(submitButton);
 
     document.getElementsByTagName("body")[0].appendChild(breakLine);
     document.getElementsByTagName("body")[0].appendChild(newForm);
+
+    newForm.addEventListener('submit', callbackFunction);
 }
+
+function callbackFunction(event) {
+    event.preventDefault();
+    
+    const myFormData = new FormData(event.target);
+
+    const formDataObj = Object.fromEntries(myFormData.entries());
+    console.log(formDataObj);
+
+    parseBook(formDataObj.title, formDataObj.author, formDataObj.pages, formDataObj.read);
+};
 
 // this is where i pull the form info from
-function doForm(){
+function parseBook(title, author, pages, read = `haven't read it`){
 
+    const newBook = new Book(title, author, pages, read);
+
+    // add to array
+    addBookToLibrary(newBook);
+
+    showLibrary();
 }
 
-const hitchhikers = new Book("HHTGT", "Douglas Adams", 287, "have read it");
+// when button is clicked, pop up the form via the function
+addButton.addEventListener("click", () => addForm());
 
-const mybook = new Book("Untitiled", "Evan Dumas", 128, "haven't read it");
+// hard coded books for testing
+const hitchhikers = new Book("HHTGT", "Douglas Adams", 287, "Have read it");
 
-const bibble = new Book("Bibble", "Jesus", 666, "haven't read it");
+const mybook = new Book("Untitiled", "Evan Dumas", 128, "Haven't read it");
+
+const bibble = new Book("Bibble", "Jesus", 666, "Haven't read it");
 
 addBookToLibrary(hitchhikers);
 addBookToLibrary(mybook);
 addBookToLibrary(bibble);
 
-console.log(myLibrary.length);
-
-
+// initial showing of pregen books
 showLibrary();
