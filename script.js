@@ -13,7 +13,7 @@ addBookToLibrary(mybook);
 addBookToLibrary(bibble);
 
 // initial showing of pregen books
-// showLibrary();
+showLibrary();
 
 
 function Book(title, author, pages, read, id) {
@@ -40,7 +40,8 @@ function addBookToTable(book) {
     let authorCell = newRow.insertCell(1);
     let pagesCell = newRow.insertCell(2);
     let readCell = newRow.insertCell(3);
-    let buttonCell = newRow.insertCell(4);
+    let removeCell = newRow.insertCell(4);
+    let changeReadCell = newRow.insertCell(5);
 
     let newTitle = document.createTextNode(book.title);
     titleCell.appendChild(newTitle);
@@ -59,15 +60,33 @@ function addBookToTable(book) {
     let removeButton = document.createElement("button");
     removeButton.setAttribute("id", book.id);
     removeButton.innerHTML = "Remove Book";
-    buttonCell.appendChild(removeButton);
+    removeCell.appendChild(removeButton);
 
     removeButton.addEventListener("click", () => removeBook(book.id));
+
+    let readButton = document.createElement("button");
+    readButton.setAttribute("id", book.id);
+    readButton.innerHTML = "Change Status";
+    changeReadCell.appendChild(readButton);
+
+    readButton.addEventListener("click", () => changeRead(book.id));
 }
 
 function removeBook(id){
     // remove the offending section
     myLibrary.splice(id, 1);
     // refresh the table, and thus the buttons
+    showLibrary();
+}
+
+function changeRead(id){
+    if (myLibrary[id].read === "Have read it"){
+        myLibrary[id].read = "Haven't read it"
+    }
+    else {
+        myLibrary[id].read = "Have read it"
+    }
+    // gotta refresh the library
     showLibrary();
 }
 
@@ -132,18 +151,17 @@ function addForm(){
     submitButton.setAttribute("value", "Add book to library");
 
     newForm.appendChild(title);
-    newForm.appendChild(breakLine);
+    
     newForm.appendChild(author);
-    newForm.appendChild(breakLine);
+    
     newForm.appendChild(pages);
-    newForm.appendChild(breakLine);
+    
     newForm.appendChild(readLabel);
     newForm.appendChild(read);
-    newForm.appendChild(breakLine);
+    
     newForm.appendChild(submitButton);
 
     document.getElementsByTagName("body")[0].appendChild(newForm);
-
     newForm.addEventListener('submit', callbackFunction);
 
 }
@@ -162,7 +180,7 @@ function callbackFunction(event) {
 };
 
 // this is where i pull the form info from
-function parseBook(title, author, pages, read = `haven't read it`, id){
+function parseBook(title, author, pages, read = `Haven't read it`, id){
 
     const newBook = new Book(title, author, pages, read, id);
 
