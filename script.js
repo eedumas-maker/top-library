@@ -4,6 +4,8 @@ class library {
     bookTable = document.getElementById("bookTable");
     addButton = document.getElementById("addBook");
 
+    // when button is clicked, pop up the form via the function
+
     // because constructor doesn't fill it, can have no constructor
 
     // function for adding a book to both library and table
@@ -14,12 +16,13 @@ class library {
 
     addBook(book){
         //first assign ID to book based on length of library
-        book.id = myLibrary.length;
-
+        book.id = this.myLibrary.length;
         // add it to the array
-        myLibrary.push(book); 
+        this.myLibrary.push(book); 
+    }
 
-        // update the table
+    addBooktoTable(book){
+                // update the table
         let newRow = bookTable.insertRow(-1);
         let titleCell = newRow.insertCell(0);
         let authorCell = newRow.insertCell(1);
@@ -37,7 +40,6 @@ class library {
         let newPages = document.createTextNode(book.pages);
         pagesCell.appendChild(newPages);
 
-        
         if(book.read){
             let newRead = document.createTextNode("Have read it");
             readCell.appendChild(newRead);
@@ -47,7 +49,6 @@ class library {
             readCell.appendChild(newRead);
         }
         
-
         // update it here when this runs during refresh.
 
         let removeButton = document.createElement("button");
@@ -55,30 +56,40 @@ class library {
         removeButton.innerHTML = "Remove Book";
         removeCell.appendChild(removeButton);
 
-        removeButton.addEventListener("click", () => removeBook(book.id));
+        removeButton.addEventListener("click", () => this.removeBook(book.id));
 
         let readButton = document.createElement("button");
         readButton.setAttribute("id", book.id);
         readButton.innerHTML = "Change Status";
         changeReadCell.appendChild(readButton);
 
-        readButton.addEventListener("click", () => changeRead(book.id));
+        readButton.addEventListener("click", () => book.changeRead(book.id));
     }
 
     removeBook(id){
         // remove the offending section
-        myLibrary.splice(id, 1);
+        this.myLibrary.splice(id, 1);
         // refresh the table, and thus the buttons
-        showLibrary();
+        this.showLibrary();
     }
 
-    showLibrary(){
+    showLibrary() {
+        this.removeTable(); //this refreshes the table when you want to show new books.
+        // this will refresh the button id too!
 
+        for(let i = 0; i < this.myLibrary.length; i++) {
+            this.addBooktoTable(this.myLibrary[i]);
+            this.myLibrary[i].id = i;
+        }
+    }
+
+    removeTable() {
+        while(this.bookTable.rows.length > 2){
+            this.bookTable.deleteRow(2);
+        };
     }
 
     addForm(){
-        // Create a break line element
-        let breakLine = document.createElement("br");
 
         // make the form not submit, instead run a function to pull the data
         let newForm = document.createElement("form");
@@ -150,34 +161,39 @@ class book {
     }
 
     // ---------- Getters ---------- //
-
     get title(){
-        return this.title;
+        return this._title;
     }
-
     get author(){
-        return this.author;
+        return this._author;
     }
-
     get pages(){
-        return this.pages;
+        return this._pages;
     }
-
     get read(){
-        return this.read;
+        return this._read;
     }
-
     get id(){
-        return this.id;
+        return this._id;
     }
-
     // ---------- Setters ---------- //
 
-    set setID(id){ // just don't pass it during the constructor
-        this.id = id;
+    set title(value){
+        this._title = value;
     }
-
-
+    set author(value){
+        this._author = value;
+    }
+    set pages(value){
+        this._pages = value;
+    }
+    set read(value){
+        this._read = value;
+    }
+    set id(value){ // just don't pass it during the constructor
+        this._id = value;
+    }
+    
     set changeRead(read) { // set for has read (toggle function from button push)
         if(this.read !== true){
             this.read = true;
@@ -199,6 +215,10 @@ const newLibrary = new library();
 newLibrary.addBook(hitchhikers);
 newLibrary.addBook(mybook);
 newLibrary.addBook(bibble);
+
+newLibrary.showLibrary();
+
+;
 
 // ------------ Old Code Below ------------ //
 
@@ -277,131 +297,131 @@ newLibrary.addBook(bibble);
 //     readButton.addEventListener("click", () => changeRead(book.id));
 // }
 
-function removeBook(id){
-    // remove the offending section
-    myLibrary.splice(id, 1);
-    // refresh the table, and thus the buttons
-    showLibrary();
-}
+// function removeBook(id){
+//     // remove the offending section
+//     myLibrary.splice(id, 1);
+//     // refresh the table, and thus the buttons
+//     showLibrary();
+// }
 
-function changeRead(id){
-    if (myLibrary[id].read === "Have read it"){
-        myLibrary[id].read = "Haven't read it"
-    }
-    else {
-        myLibrary[id].read = "Have read it"
-    }
-    // gotta refresh the library
-    showLibrary();
-}
+// function changeRead(id){
+//     if (myLibrary[id].read === "Have read it"){
+//         myLibrary[id].read = "Haven't read it"
+//     }
+//     else {
+//         myLibrary[id].read = "Have read it"
+//     }
+//     // gotta refresh the library
+//     showLibrary();
+// }
 
-function showLibrary() {
-    removeTable(); //this refreshes the table when you want to show new books.
-    // this will refresh the button id too!
+// function showLibrary() {
+//     removeTable(); //this refreshes the table when you want to show new books.
+//     // this will refresh the button id too!
 
-    for(let i = 0; i < myLibrary.length; i++) {
-        addBookToTable(myLibrary[i]);
-        myLibrary[i].id = i;
-    }
-}
+//     for(let i = 0; i < myLibrary.length; i++) {
+//         addBookToTable(myLibrary[i]);
+//         myLibrary[i].id = i;
+//     }
+// }
 
-function removeTable() {
-    while(bookTable.rows.length > 2){
-        bookTable.deleteRow(2);
-    };
-}
+// function removeTable() {
+//     while(bookTable.rows.length > 2){
+//         bookTable.deleteRow(2);
+//     };
+// }
 
-function addForm(){
-    // Create a break line element
-    let breakLine = document.createElement("br");
+// function addForm(){
+//     // Create a break line element
+//     let breakLine = document.createElement("br");
 
-    // make the form not submit, instead run a function to pull the data
-    let newForm = document.createElement("form");
-    newForm.setAttribute("onsubmit", "return");
-    newForm.setAttribute("id", "newForm");
+//     // make the form not submit, instead run a function to pull the data
+//     let newForm = document.createElement("form");
+//     newForm.setAttribute("onsubmit", "return");
+//     newForm.setAttribute("id", "newForm");
 
-    // create input for Title (text)
-    let title = document.createElement("input");
-    title.setAttribute("type", "text");
-    title.setAttribute("name", "title");
-    title.setAttribute("placeholder", "Title");
+//     // create input for Title (text)
+//     let title = document.createElement("input");
+//     title.setAttribute("type", "text");
+//     title.setAttribute("name", "title");
+//     title.setAttribute("placeholder", "Title");
 
-    // input for Author (text)
-    let author = document.createElement("input");
-    author.setAttribute("type", "text");
-    author.setAttribute("name", "author");
-    author.setAttribute("placeholder", "Author");
+//     // input for Author (text)
+//     let author = document.createElement("input");
+//     author.setAttribute("type", "text");
+//     author.setAttribute("name", "author");
+//     author.setAttribute("placeholder", "Author");
 
-    // input for Pages (number)
-    let pages = document.createElement("input");
-    pages.setAttribute("type", "number");
-    pages.setAttribute("name", "pages");
-    pages.setAttribute("placeholder", "Pages");
+//     // input for Pages (number)
+//     let pages = document.createElement("input");
+//     pages.setAttribute("type", "number");
+//     pages.setAttribute("name", "pages");
+//     pages.setAttribute("placeholder", "Pages");
 
-    // input for Have Read It (checkbox)
-    let read = document.createElement("input");
-    read.setAttribute("type", "checkbox");
-    read.setAttribute("id", "read");
-    read.setAttribute("name", "read");
-    read.setAttribute("value","Have read it");
+//     // input for Have Read It (checkbox)
+//     let read = document.createElement("input");
+//     read.setAttribute("type", "checkbox");
+//     read.setAttribute("id", "read");
+//     read.setAttribute("name", "read");
+//     read.setAttribute("value","Have read it");
 
-    let readLabel = document.createElement("label");
-    readLabel.setAttribute("for", "read");
-    readLabel.textContent = "Have you read it?";
+//     let readLabel = document.createElement("label");
+//     readLabel.setAttribute("for", "read");
+//     readLabel.textContent = "Have you read it?";
 
-    // will need a submit button to add the book
+//     // will need a submit button to add the book
 
-    let submitButton = document.createElement("input");
-    submitButton.setAttribute("type", "submit");
-    submitButton.setAttribute("value", "Add book to library");
+//     let submitButton = document.createElement("input");
+//     submitButton.setAttribute("type", "submit");
+//     submitButton.setAttribute("value", "Add book to library");
 
-    newForm.appendChild(title);
+//     newForm.appendChild(title);
     
-    newForm.appendChild(author);
+//     newForm.appendChild(author);
     
-    newForm.appendChild(pages);
+//     newForm.appendChild(pages);
     
-    newForm.appendChild(readLabel);
-    newForm.appendChild(read);
+//     newForm.appendChild(readLabel);
+//     newForm.appendChild(read);
     
-    newForm.appendChild(submitButton);
+//     newForm.appendChild(submitButton);
 
-    document.getElementsByTagName("body")[0].appendChild(newForm);
-    newForm.addEventListener('submit', callbackFunction);
+//     document.getElementsByTagName("body")[0].appendChild(newForm);
+//     newForm.addEventListener('submit', callbackFunction);
 
-}
+// }
 
-function callbackFunction(event) {
-    event.preventDefault();
+// function callbackFunction(event) {
+//     event.preventDefault();
     
-    const myFormData = new FormData(event.target);
+//     const myFormData = new FormData(event.target);
 
-    const formDataObj = Object.fromEntries(myFormData.entries());
+//     const formDataObj = Object.fromEntries(myFormData.entries());
 
-    // the id is the current library length (which will be the new array position once added, smart!)
-    // it assumes the library array is the same as what's showing, will need to fix that.
-    parseBook(formDataObj.title, formDataObj.author, formDataObj.pages, formDataObj.read, myLibrary.length);
+//     // the id is the current library length (which will be the new array position once added, smart!)
+//     // it assumes the library array is the same as what's showing, will need to fix that.
+//     parseBook(formDataObj.title, formDataObj.author, formDataObj.pages, formDataObj.read, myLibrary.length);
 
-};
+// };
 
-// this is where i pull the form info from
-function parseBook(title, author, pages, read = `Haven't read it`, id){
+// // this is where i pull the form info from
+// function parseBook(title, author, pages, read = `Haven't read it`, id){
 
-    const newBook = new Book(title, author, pages, read, id);
+//     const newBook = new Book(title, author, pages, read, id);
 
-    // add to array
-    addBookToLibrary(newBook);
+//     // add to array
+//     addBookToLibrary(newBook);
 
-    // refresh library
-    showLibrary();
+//     // refresh library
+//     showLibrary();
 
-    // remove form and break
-    let node = document.getElementById("newForm");
-    console.log(node);
+//     // remove form and break
+//     let node = document.getElementById("newForm");
+//     console.log(node);
 
-    let garbage = node.parentNode.removeChild(node);
-}
+//     let garbage = node.parentNode.removeChild(node);
+// }
 
-// when button is clicked, pop up the form via the function
-addButton.addEventListener("click", () => addForm());
+// // when button is clicked, pop up the form via the function
+// addButton.addEventListener("click", () => addForm());
 
