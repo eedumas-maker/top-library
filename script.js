@@ -4,6 +4,10 @@ class library {
     bookTable = document.getElementById("bookTable");
     addButton = document.getElementById("addBook");
 
+    constructor() {
+        this.addButton.addEventListener("click", () => this.addForm());
+    }
+
     // when button is clicked, pop up the form via the function
 
     // because constructor doesn't fill it, can have no constructor
@@ -95,7 +99,6 @@ class library {
     }
 
     addForm(){
-
         // make the form not submit, instead run a function to pull the data
         let newForm = document.createElement("form");
         newForm.setAttribute("onsubmit", "return");
@@ -149,7 +152,6 @@ class library {
 
         document.getElementsByTagName("body")[0].appendChild(newForm);
         newForm.addEventListener('submit', callbackFunction);
-
     }
 
 }
