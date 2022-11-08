@@ -1,3 +1,35 @@
+class library {
+    myLibrary = [];
+
+    // function for adding a book to both library and table
+
+    // function for removing a book on button press
+    
+    // function for showing the new library table
+
+    addForm
+
+
+}
+
+class book {
+    constructor(title, author, pages, read) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.read = read;
+    }
+
+    // get and set for values?
+
+    // set for has read (toggle function)
+
+}
+
+
+// ------------ Old Code Below ------------ //
+
+
 let myLibrary = [];
 
 const bookTable = document.getElementById("bookTable");
