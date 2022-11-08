@@ -44,7 +44,7 @@ class library {
             let newRead = document.createTextNode("Have read it");
             readCell.appendChild(newRead);
         }
-        else {
+        else if(book.read !== true){
             let newRead = document.createTextNode("Haven't read it");
             readCell.appendChild(newRead);
         }
@@ -63,7 +63,12 @@ class library {
         readButton.innerHTML = "Change Status";
         changeReadCell.appendChild(readButton);
 
-        readButton.addEventListener("click", () => book.changeRead(book.id));
+        readButton.addEventListener("click", () => this.readChange(book));
+    }
+
+    readChange(book){
+        book.changeRead();
+        this.showLibrary();
     }
 
     removeBook(id){
@@ -194,7 +199,7 @@ class book {
         this._id = value;
     }
     
-    set changeRead(read) { // set for has read (toggle function from button push)
+    changeRead() { // set for has read (toggle function from button push)
         if(this.read !== true){
             this.read = true;
         }
@@ -206,9 +211,9 @@ class book {
 
 }
 
-const hitchhikers = new book("HHTGT", "Douglas Adams", 287, "Have read it");
-const mybook = new book("Untitiled", "Evan Dumas", 128, "Haven't read it");
-const bibble = new book("Bibble", "Jesus", 666, "Haven't read it");
+const hitchhikers = new book("HHTGT", "Douglas Adams", 287, true);
+const mybook = new book("Untitiled", "Evan Dumas", 128, false);
+const bibble = new book("Bibble", "Jesus", 666, false);
 
 const newLibrary = new library();
 
