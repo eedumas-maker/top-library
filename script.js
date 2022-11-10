@@ -98,6 +98,7 @@ class library {
         };
     }
 
+
     addForm(){
         // make the form not submit, instead run a function to pull the data
         let newForm = document.createElement("form");
@@ -108,18 +109,21 @@ class library {
         let title = document.createElement("input");
         title.setAttribute("type", "text");
         title.setAttribute("name", "title");
+        title.setAttribute("id", "title");
         title.setAttribute("placeholder", "Title");
 
         // input for Author (text)
         let author = document.createElement("input");
         author.setAttribute("type", "text");
         author.setAttribute("name", "author");
+        author.setAttribute("id", "author");
         author.setAttribute("placeholder", "Author");
 
         // input for Pages (number)
         let pages = document.createElement("input");
         pages.setAttribute("type", "number");
         pages.setAttribute("name", "pages");
+        pages.setAttribute("id", "pages");
         pages.setAttribute("placeholder", "Pages");
 
         // input for Have Read It (checkbox)
@@ -136,7 +140,8 @@ class library {
         // will need a submit button to add the book
 
         let submitButton = document.createElement("input");
-        submitButton.setAttribute("type", "submit");
+        submitButton.setAttribute("type", "button");
+        submitButton.setAttribute("id", "submitBook");
         submitButton.setAttribute("value", "Add book to library");
 
         newForm.appendChild(title);
@@ -151,7 +156,29 @@ class library {
         newForm.appendChild(submitButton);
 
         document.getElementsByTagName("body")[0].appendChild(newForm);
-        newForm.addEventListener('submit', callbackFunction);
+        
+        const addBookButton = document.querySelector("#submitBook")
+        
+        addBookButton.addEventListener('click', () => this.parseBook());
+    }
+
+    parseBook(){
+        const title = document.querySelector("#title").value;
+        const author = document.querySelector("#author").value;
+        const pages = document.querySelector("#pages").value;
+        const read = document.querySelector("#read").value;
+        const id = this.myLibrary.length;
+        
+
+        const newBook = new book(title, author, pages, read, id);
+
+        this.addBook(newBook);
+        
+        let node = document.getElementById("newForm");
+
+        let garbage = node.parentNode.removeChild(node);
+
+        this.showLibrary();
     }
 
 }
